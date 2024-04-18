@@ -1,9 +1,10 @@
 #include <msp430.h>
 #include "libTimer.h"
 #include "buzzer.h"
+//#include "led.h"
 //#include "method.c"
-#define NOTE_A 440
-#define NOTE_B 494
+#define A 440
+#define B 494
 
 #define SW1 BIT0
 #define SW2 BIT1
@@ -32,63 +33,56 @@ int main(void) {
     P1IE |= SWITCH1;
     P1OUT |= SWITCH1;
     P1DIR &= ~SWITCH1;
+
+    P2REN |= SWITCH2;
+    P2IE  |= SWITCH2;
+    P2OUT |= SWITCH2;
+    P2DIR &= ~SWITCH2;
     
     //buzzer_set_period(0000);
     
     or_sr(0x18);          // CPU off, GIE on
 }
 
+//this is for S1
 void __interrupt_vec(WDT_VECTOR) WDT() {
 
   //inputs start at 2
   //one breaks it
-  char p1 = P2IN;
+  char s1 = P2IN;
+  char s2 = P3IN;
+  //when switch is pressed
+  P1IES |= (s1 & SWITCH2);
+
+  //P2IES |= (s2 & SWITCH3);
+
+  //when switch is releeased
+  P1IES &= (s1 | ~SWITCH2);
+
+  //P2IES &= (s2 | ~SWITCH3);
+  
+  if (s1 & SWITCH1) {
+    buzzer_set_period(0000);
+  }else{
+    buzzer_set_period(A);
+  }
+}
+
+//this is for S2
+void __interrupt_vec1() {
+  //int count = 0;
+  
   char p2 = P3IN;
-  //char p3 = P4IN;
 
   //when switch is pressed
-  P1IES |= (p1 & SWITCH2);
-  //when switch is releeased
-  P1IES &= (p1 | ~SWITCH2);  
+  P2IES |= (p2 & SWITCH4);
+  //when released
+  P2IES &= (p2 | ~SWITCH4);
   
-  if (p1 & SWITCH1) {
-    buzzer_set_period(0000);
-  }else{
-    buzzer_set_period(NOTE_A);
-  }
-  /*
-  if (p2 & SWITCH2) {
-    buzzer_set_period(0000);
-  }else{
-    buzzer_set_period(NOTE_B);
-  }*/
-  //buzzer_set_period(3000);
-
-}
-void __manual_song() {
-  int count = 0;
-  char p2 = P3IN;
-
-  /*
-  if (p2 & SWITCH2) {
-    count++;
-  }else{
-    count++;
-  }
-  switch (count){
-  case 0:
-    buzzer_set_period(200);
-    break;
-  case 1:
+  if (p2 & SWITCH4) {
     buzzer_set_period(300);
-    break;
-  case 2:
-    buzzer_set_period(400);
-    break;
-  default:
-    buzzer_set_period(1000);
-    break;
+  }else{
+    buzzer_set_period(B);
   }
-  */
+}  
 
-}
