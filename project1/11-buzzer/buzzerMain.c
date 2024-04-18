@@ -40,6 +40,8 @@ int main(void) {
 
 void __interrupt_vec(WDT_VECTOR) WDT() {
 
+  //inputs start at 2
+  //one breaks it
   char p1 = P2IN;
   char p2 = P3IN;
   //char p3 = P4IN;
@@ -61,5 +63,32 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
     buzzer_set_period(NOTE_B);
   }*/
   //buzzer_set_period(3000);
+
+}
+void __manual_song() {
+  int count = 0;
+  char p2 = P3IN;
+
+  /*
+  if (p2 & SWITCH2) {
+    count++;
+  }else{
+    count++;
+  }
+  switch (count){
+  case 0:
+    buzzer_set_period(200);
+    break;
+  case 1:
+    buzzer_set_period(300);
+    break;
+  case 2:
+    buzzer_set_period(400);
+    break;
+  default:
+    buzzer_set_period(1000);
+    break;
+  }
+  */
 
 }
