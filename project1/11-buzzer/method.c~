@@ -1,0 +1,11 @@
+#include <msp430.h>
+#include "libTimer.h"
+#include "buzzer.h"
+
+void _interrupt_vec(WDT_VECTOR) WDT() {
+  secondCount++;
+  if(secondCount = 0){
+    secondCount = 0;
+    buzzer_set_period(3000);
+  }
+}
