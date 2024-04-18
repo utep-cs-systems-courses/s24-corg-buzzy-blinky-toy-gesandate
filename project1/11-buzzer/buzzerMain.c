@@ -5,10 +5,10 @@
 #define NOTE_A 440
 #define NOTE_B 494
 
-#define SW1 BIT3
-#define SW2 BIT0
-#define SW3 BIT1
-#define SW4 BIT2
+#define SW1 BIT0
+#define SW2 BIT1
+#define SW3 BIT2
+#define SW4 BIT3
 
 #define SWITCH1 SW1
 #define SWITCH2 SW2
@@ -42,12 +42,12 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
 
   char p1 = P2IN;
   char p2 = P3IN;
-  char p3 = P3IN;
+  //char p3 = P4IN;
 
   //when switch is pressed
   P1IES |= (p1 & SWITCH2);
   //when switch is releeased
-  P1IES &= (p1 | ~SWITCH2);
+  P1IES &= (p1 | ~SWITCH2);  
   
   if (p1 & SWITCH1) {
     buzzer_set_period(0000);
