@@ -52,28 +52,14 @@ int secondCount = 0;
 
 //this is for S1
 void __interrupt_vec(WDT_VECTOR) WDT() {
-
-  //inputs start at 2
-  //one breaks it
-  secondCount++;
-  /*
-  if (secondCount <= 250){
-    secondCount = 0;
-    //buzzer_set_period(A);
-    P1OUT ^= LED_GREEN;
-  }
-  */
-  
-  
+    
   char s2 = P2IN;
   //when switch is pressed
   P2IES |= (s2 & SWITCHES);
-
   //P2IES |= (s2 & SWITCH3);
 
   //when switch is releeased
   P2IES &= (s2 | ~SWITCHES);
-
   /*switch (s2){
   case (SW1):
     buzzer_set_period(A);
@@ -92,8 +78,6 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
   } else {
     buzzer_set_period(700);
     //P2OUT |= (s2 & SWITCHES);
-  
-
     }
   /*
   if (s2 & SW2) {
