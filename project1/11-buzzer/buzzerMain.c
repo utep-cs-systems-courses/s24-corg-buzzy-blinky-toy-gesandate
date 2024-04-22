@@ -5,11 +5,11 @@
 //#include "method.c"
 #define A 440
 #define B 494
-/*
+
 #define LED_RED BIT0               // P1.0
 #define LED_GREEN BIT6             // P1.6
 #define LEDS (LED_RED | LED_GREEN)
-*/
+
 #define SW1 BIT0
 #define SW2 BIT1
 #define SW3 BIT2
@@ -31,11 +31,12 @@ int main(void) {
     int secondCount = 0;
     enableWDTInterrupts();
     //buzzer_set_period(freq);	/* start buzzing!!! 2MHz/1000 = 2kHz*/
-    /*
-    P2DIR |= LEDS;
-    P2OUT &= ~LED_GREEN;
-    P2OUT |= LED_RED;
-    */
+    
+    P1DIR |= LEDS;
+    P1OUT &= ~LED_GREEN;
+    //P1OUT |= LED_RED;
+    P1OUT &= ~LED_RED;
+    
 
     P2REN |= SWITCHES;
     P2IE  |= SWITCHES;
@@ -67,12 +68,12 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
   
   char s2 = P2IN;
   //when switch is pressed
+  P1IES |= (s2 & SWITCHES);
+
   P2IES |= (s2 & SWITCHES);
 
-  //P2IES |= (s2 & SWITCH3);
-
   //when switch is releeased
-  P2IES &= (s2 | ~SWITCHES);
+  P1IES &= (s2 | ~SWITCHES);
 
   /*switch (s2){
   case (SW1):
@@ -86,21 +87,22 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
   //P2IES &= (s2 | ~SWITCH3);
   
   if (s2 & SW1) {
-    //P1OUT |= LED_RED;
-    //P1OUT ^= LED_GREEN;
+    P1OUT ^= ~LED_RED;
+    P1OUT ^= ~LED_GREEN;
     buzzer_set_period(0);
   } else {
     buzzer_set_period(700);
+    P1OUT ^+ LED_RED;
+    P1OUT ^+ LED_GREEN;
     //P2OUT |= (s2 & SWITCHES);
   
-
     }
-  /*
+  
   if (s2 & SW2) {
     buzzer_set_period(0);
   } else {
-    buzzer_set_period(B);
-  }*/
+    buzzer_set_period(A);
+  }
   /*
   if (s2 | ~SW1) {
     buzzer_set_period(A);
@@ -121,8 +123,8 @@ void __interrupt_vec(WDT_VECTOR) WDT() {
 }
 
 //this is for S2
-/*
-void __interrupt_vec1(WDT_VECTOR) WDT() {
+
+/*void __interrupt_vec1(WDT_VECTOR) WDT() {
   //int count = 0;
   
   char p2 = P2IN;
@@ -138,4 +140,5 @@ void __interrupt_vec1(WDT_VECTOR) WDT() {
     buzzer_set_period(B);
   }
 }
+
 */
