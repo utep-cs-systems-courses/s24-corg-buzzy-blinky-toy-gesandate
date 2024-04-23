@@ -52,93 +52,44 @@ int main(void) {
 int secondCount = 0;
 
 //this is for S1
-void __interrupt_vec(WDT_VECTOR) WDT() {
+void __interrupt_vec (WDT_VECTOR) WDT() {
 
   //inputs start at 2
-  //one breaks it
-  secondCount++;
-  /*
-  if (secondCount <= 250){
-    secondCount = 0;
-    //buzzer_set_period(A);
-    P1OUT ^= LED_GREEN;
-  }
-  */
-  
+  secondCount++;  
   
   char s2 = P2IN;
   //when switch is pressed
-  P1IES |= (s2 & SWITCHES);
+  P1IES |= (s2 & SW1);
 
-  P2IES |= (s2 & SWITCHES);
+  P2IES |= (s2 & SW2);
 
   //when switch is releeased
-  P1IES &= (s2 | ~SWITCHES);
-
-  /*switch (s2){
-  case (SW1):
-    buzzer_set_period(A);
-  
-  default:
-    buzzer_set_period(0);
-
-    }*/
-
+  P1IES &= (s2 | ~SW1);
   //P2IES &= (s2 | ~SWITCH3);
-  
+  //released
   if (s2 & SW1) {
-    P1OUT ^= ~LED_RED;
-    P1OUT ^= ~LED_GREEN;
-    buzzer_set_period(0);
+    P1OUT ^= LED_RED;
+    P1OUT ^= LED_GREEN;
+    //__interrupt_vec();
+    //buzzer_set_period(0);
+    //on click
   } else {
     buzzer_set_period(700);
-    P1OUT ^+ LED_RED;
-    P1OUT ^+ LED_GREEN;
+    P1OUT &= LED_RED;
+    P1OUT &= LED_GREEN;
+    //__interrupt_vec();
     //P2OUT |= (s2 & SWITCHES);
-  
     }
-  
-  if (s2 & SW2) {
+  if (s2 & SW2 && s2 & SW3 && s2 & SW4) {  
     buzzer_set_period(0);
-  } else {
-    buzzer_set_period(A);
-  }
-  /*
-  if (s2 | ~SW1) {
-    buzzer_set_period(A);
-  }
-  if (s2 | ~SW3){
-    //P1OUT |= LED_RED;
-    buzzer_set_period(A);
-    //buzzer_set_period(B);
-  }
-  if (s2 | ~SW2){
-    buzzer_set_period(A);
-  }
-  if (s2 | ~SW4) {
-    buzzer_set_period(0);
-  }*/
-
+  } else if (!(s2 & SW2)){
+    //buzz:
+    buzzer_set_period(500);
+    
+    } else if (!(s2 & SW3)) {
+	buzzer_set_period(1000);
+      } else if (!(s2 & SW4)) {
+	  buzzer_set_period(2000);
+	}
   
 }
-
-//this is for S2
-
-/*void __interrupt_vec1(WDT_VECTOR) WDT() {
-  //int count = 0;
-  
-  char p2 = P2IN;
-
-  //when switch is pressed
-  P2IES |= (p2 & SWITCHES);
-  //when released
-  P2IES &= (p2 | ~SWITCHES);
-  
-  if (p2 & SW2) {
-    buzzer_set_period(0000);
-  }else{
-    buzzer_set_period(B);
-  }
-}
-
-*/
